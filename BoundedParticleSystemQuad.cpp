@@ -2,6 +2,18 @@
 
 using namespace cocos2d;
 
+#define MAXPARTICLES 1000
+
+BoundedParticleSystemQuad::BoundedParticleSystemQuad()
+{
+    this->quad = (V3F_C4B_T2F_Quad*)malloc(MAXPARTICLES * sizeof(V3F_C4B_T2F_Quad));
+}
+
+BoundedParticleSystemQuad::~BoundedParticleSystemQuad(void)
+{
+    free(this->quad);
+}
+
 bool PolygonContainsPoint(std::vector<Point> polyPoints, Point point) {
     int i, j, nvert = polyPoints.size();
     bool c = false;
@@ -62,10 +74,6 @@ void BoundedParticleSystemQuad::draw(Renderer *renderer, const kmMat4 &transform
 
     if(_particleIdx > 0)
     {
-        
-        V3F_C4B_T2F_Quad *quad;
-        quad = (V3F_C4B_T2F_Quad*)malloc(_particleIdx * sizeof(V3F_C4B_T2F_Quad));
-        
         int totalQuads = 0;
         for (int i = 0; i < _particleIdx; i++) {
             V3F_C4B_T2F_Quad *currentQuad;
@@ -77,6 +85,9 @@ void BoundedParticleSystemQuad::draw(Renderer *renderer, const kmMat4 &transform
             if (create) {
                 memcpy(&quad[totalQuads], currentQuad, sizeof(V3F_C4B_T2F_Quad));
                 totalQuads += 1;
+                if (totalQuads >= MAXPARTICLES) {
+                    break;
+                }
             }
         }
         
@@ -84,5 +95,6 @@ void BoundedParticleSystemQuad::draw(Renderer *renderer, const kmMat4 &transform
             _quadCommand.init(_globalZOrder, _texture->getName(), _shaderProgram, _blendFunc, quad, totalQuads, transform);
             renderer->addCommand(&_quadCommand);
         }
+        
     }
 }
