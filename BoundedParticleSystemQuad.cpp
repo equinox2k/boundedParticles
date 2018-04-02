@@ -68,14 +68,15 @@ BoundedParticleSystemQuad* BoundedParticleSystemQuad::createWithTotalParticles(i
     return ret;
 }
 
-void BoundedParticleSystemQuad::draw(Renderer *renderer, const kmMat4 &transform, bool transformUpdated)
+//void BoundedParticleSystemQuad::draw(Renderer *renderer, const kmMat4 &transform, bool transformUpdated)
+void
+BoundedParticleSystemQuad::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
 {
-    CCASSERT( _particleIdx == _particleCount, "Abnormal error in particle quad");
-
-    if(_particleIdx > 0)
+    if(_particleCount > 0)
     {
         int totalQuads = 0;
-        for (int i = 0; i < _particleIdx; i++) {
+
+        for (int i = 0; i < _particleCount; i++) {
             V3F_C4B_T2F_Quad *currentQuad;
             currentQuad = &(_quads[i]);
             
@@ -92,7 +93,7 @@ void BoundedParticleSystemQuad::draw(Renderer *renderer, const kmMat4 &transform
         }
         
         if (totalQuads > 0) {
-            _quadCommand.init(_globalZOrder, _texture->getName(), _shaderProgram, _blendFunc, quad, totalQuads, transform);
+            _quadCommand.init(_globalZOrder, _texture, getGLProgramState(), _blendFunc, quad, totalQuads, transform, flags);
             renderer->addCommand(&_quadCommand);
         }
         

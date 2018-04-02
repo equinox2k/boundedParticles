@@ -11,11 +11,12 @@ public:
     static BoundedParticleSystemQuad* create(std::vector<Point> polyPoints);
     static BoundedParticleSystemQuad* create(const std::string& plistFile, std::vector<Point> polyPoints);
     static BoundedParticleSystemQuad* createWithTotalParticles(int numberOfParticles, std::vector<Point> polyPoints);
-    virtual void draw(Renderer *renderer, const kmMat4 &transform, bool transformUpdated) override;
+    virtual void draw(Renderer *renderer, const Mat4 &transform, uint32_t flags) override;
 protected:
-    BoundedParticleSystemQuad(){}
-    virtual ~BoundedParticleSystemQuad(){}
+    BoundedParticleSystemQuad();
+    virtual ~BoundedParticleSystemQuad();
     std::vector<Point> _polyPoints;
+    V3F_C4B_T2F_Quad *quad;
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(BoundedParticleSystemQuad);
 };
